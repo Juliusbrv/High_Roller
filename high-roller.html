@@ -1,0 +1,120 @@
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+    
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+            width: 500px;
+        }
+    
+        #previous-roll, #current-roll, #result, #bankroll {
+            margin: 20px 0;
+        }
+    
+        #previous-roll-value, #current-roll-value, #result-value, #bankroll-value {
+            font-weight: bold;
+        }
+    
+        #bet-area {
+            display: flex;
+            justify-content: space-around;
+            width: 200px;
+            margin: 20px 0;
+        }
+    
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    
+        button:hover {
+            background-color: #666;
+        }
+    </style>
+    <title>High Roller</title>
+</head>
+<body>
+    <h1>Welcome to High Roller</h1>
+    <p>Place your bet on whether the next roll will be higher or lower than the previous roll.</p>
+    <div id="game-container">
+        <div id="previous-roll">Previous Roll: <span id="previous-roll-value"></span></div>
+        <div id="current-roll">Current Roll: <span id="current-roll-value"></span></div>
+        <div id="bet-area">
+            <button id="bet-higher">Higher</button>
+            <button id="bet-lower">Lower</button>
+            <input type="number" id="bet-amount" min="1" value="1">
+        </div>
+        <div id="result">Result: <span id="result-value"></span></div>
+        <div id="bankroll">Bankroll: <span id="bankroll-value">1000</span></div>
+    </div>
+    <script>
+        const betHigherButton = document.getElementById("bet-higher");
+        const betLowerButton = document.getElementById("bet-lower");
+        const betAmountInput = document.getElementById("bet-amount");
+        const previousRollValue = document.getElementById("previous-roll-value");
+        const currentRollValue = document.getElementById("current-roll-value");
+        const resultValue = document.getElementById("result-value");
+        const bankrollValue = document.getElementById("bankroll-value");
+        let previousRoll = null;
+    let bankroll = 1000;
+    let currentRoll = 0;
+
+    function rollDice() {
+        return Math.floor(Math.random() * 6) + 1;
+    }
+
+    function placeBet(bet) {
+        let betAmount = betAmountInput.value;
+        if (bankroll < betAmount) {
+            resultValue.innerHTML = "Insufficient funds.";
+            return;
+        }
+
+        currentRoll = rollDice() + rollDice();
+        currentRollValue.innerHTML = currentRoll;
+
+        if (previousRoll === null) {
+            resultValue.innerHTML = "No previous roll to compare to. Bet returned.";
+            return;
+        }
+
+        if (bet === "higher" && currentRoll > previousRoll) {
+            resultValue.innerHTML = "You won!";
+            bankroll += betAmount;
+        } else if (bet === "lower" && currentRoll < previousRoll) {
+            resultValue.innerHTML = "You won!";
+            bankroll += betAmount;
+        } else {
+            resultValue.innerHTML = "You lost.";
+            bankroll -= betAmount;
+        }
+    }
+
+    betHigherButton.addEventListener("click", function() {
+        placeBet("higher");
+        previousRoll = currentRoll;
+        previousRollValue.innerHTML = previousRoll;
+        bankrollValue.innerHTML = bankroll;
+    });
+
+    betLowerButton.addEventListener("click", function() {
+        placeBet("lower");
+        previousRoll = currentRoll;
+        previousRollValue.innerHTML = previousRoll;
+        bankrollValue.innerHTML = bankroll
+    });
+</script>
+</body>
+</html>
